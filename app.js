@@ -641,10 +641,13 @@ function populateSetup() {
   form.height.value = game?.height || saved.height;
   form.mines.value = game?.mineCount || saved.mines;
   form.opponentMode.value = game ? (game.players[1].isBot ? 'medium-bot' : 'human') : saved.opponentMode;
+  if (['Brainrot Bot', 'Jimothy', 'Player Two'].includes(form.playerTwo.value.trim())) {
+    form.playerTwo.value = form.opponentMode.value === 'medium-bot' ? 'Brainrot Bot' : 'Jimothy';
+  }
 }
 
 function loadSettings() {
-  const defaults = { playerOne: 'Player One', playerTwo: 'Player Two', opponentMode: 'human', width: 9, height: 9, mines: 10 };
+  const defaults = { playerOne: 'Player One', playerTwo: 'Brainrot Bot', opponentMode: 'medium-bot', width: 9, height: 9, mines: 10 };
   try {
     const saved = JSON.parse(localStorage.getItem(SETTINGS_KEY) || '{}');
     return { ...defaults, ...saved };
@@ -685,6 +688,12 @@ function submitSetup(event) {
 
 function bindEvents() {
   $('#setup-form').addEventListener('submit', submitSetup);
+  $('#setup-form').opponentMode.addEventListener('change', (event) => {
+    const playerTwo = $('#setup-form').playerTwo;
+    if (['Brainrot Bot', 'Jimothy', 'Player Two'].includes(playerTwo.value.trim())) {
+      playerTwo.value = event.target.value === 'medium-bot' ? 'Brainrot Bot' : 'Jimothy';
+    }
+  });
   $('#settings-button').addEventListener('click', () => { populateSetup(); openModal('setup-modal'); });
   $('#new-game-button').addEventListener('click', () => { closeModal('result-modal'); newGame(loadSettings()); });
   $('#close-result-button').addEventListener('click', () => closeModal('result-modal'));

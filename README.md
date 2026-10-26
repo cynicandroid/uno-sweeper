@@ -6,6 +6,12 @@ UNO Sweeper is a two-player strategy game that combines UNO card play with a Min
 
 UNO Sweeper is an independent fan-made project created for fun and entertainment. It is not affiliated with, endorsed by, sponsored by, or otherwise associated with UNO, Microsoft, or Minecraft. UNO, Minecraft, and related names, marks, and imagery belong to their respective owners.
 
+## Play online
+
+Scan the QR code or visit [cynicandroid.github.io/uno-sweeper](https://cynicandroid.github.io/uno-sweeper/):
+
+![QR code for the online UNO Sweeper game](assets/uno-sweeper-qr.png)
+
 ## Current status
 
 The project is a playable offline pass-and-play build. It includes setup, random mine generation, random card dealing, UNO color validation, special-card turn rules, board actions, scoring, mine losses, flag penalties, and end-game results.
