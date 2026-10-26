@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>UNO Sweeper</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell">
+      <header class="topbar">
+        <div class="brand-mark" aria-hidden="true">✦</div>
+        <div><p class="eyebrow">A tactical Minesweeper duel from Neil Poudyal — The Genius game designer</p><h1>UNO <span>Sweeper</span></h1></div>
+        <button class="settings-button" id="settings-button" type="button">⚙ <span>Settings</span></button>
+      </header>
+
+      <section class="opponent-hand hand-panel" aria-label="Opponent hand"><div class="hand-heading"><span id="opponent-hand-title">Player Two’s hand</span><span class="card-count" id="opponent-card-count">7 cards</span></div><div class="card-row compact" id="opponent-hand"></div></section>
+
+      <section class="play-area">
+        <div class="board-column">
+          <div class="turn-instruction" id="turn-instruction"><strong>Start a game</strong><span>Choose a card to begin.</span></div>
+          <div class="board-heading"><div><p class="eyebrow">Minefield</p><h2>Choose your move</h2></div><div class="board-controls"><div class="action-meter"><span>Actions left</span><strong id="actions-left">—</strong></div></div></div>
+          <div class="board-frame"><div class="mine-counter" id="mine-counter"><span>☠</span> 10 mines · 10 flags left</div><div class="mine-board" id="mine-board" aria-label="Minesweeper board"></div><div class="tool-picker" role="group" aria-label="Choose board action"><button class="tool-button selected" type="button" data-tool="shovel" aria-label="Select shovel" aria-pressed="true"><span class="tool-icon">⛏</span><span>Shovel</span></button><button class="tool-button" type="button" data-tool="flag" aria-label="Select flag" aria-pressed="false"><span class="tool-icon">⚑</span><span>Flag</span></button></div><div class="board-legend"><span><i class="legend-dot player-one-dot"></i> Player One reveal</span><span><i class="legend-dot player-two-dot"></i> Player Two reveal</span><span><i class="legend-flag">⚑</i> Flagged</span></div></div>
+        </div>
+        <aside class="turn-panel">
+          <div class="turn-panel-header"><p class="eyebrow">Current card</p><span class="color-chip red" id="active-color">Red</span></div>
+          <div class="discard-card uno-card red-card large-card" id="discard-card"><span class="card-corner">7</span><strong>7</strong><span class="card-corner bottom">7</span></div>
+          <div class="color-choices" id="color-choices" hidden><span>Choose the new color</span><div><button type="button" data-color="red">Red</button><button type="button" data-color="blue">Blue</button><button type="button" data-color="green">Green</button><button type="button" data-color="yellow">Yellow</button></div></div>
+          <button class="draw-pile" id="draw-pile" type="button" aria-label="Draw a card and end the turn"><span class="deck-card draw-card-icon"><span>UNO</span></span><span><strong>Draw card</strong><small>Random card · ends turn</small></span></button>
+          <section class="scoreboard side-scoreboard" aria-label="Player scores">
+            <div class="round-status"><span class="status-dot"></span><span id="round-label">Round 1</span><small id="board-label">9 × 9 · 10 mines</small></div>
+            <article class="player-card player-one active-player" id="player-card-0"><div class="avatar" id="avatar-0">A</div><div class="player-details"><div class="player-name" id="name-0">Player One <span class="turn-pill">Your turn</span></div><div class="score-line"><strong id="score-0">0</strong> points <span>·</span> <span id="revealed-0">0</span> squares <span>·</span> <span id="flags-0">0</span> flags</div></div><div class="score-accent"></div></article>
+            <article class="player-card player-two" id="player-card-1"><div class="avatar" id="avatar-1">B</div><div class="player-details"><div class="player-name" id="name-1">Player Two</div><div class="score-line"><strong id="score-1">0</strong> points <span>·</span> <span id="revealed-1">0</span> squares <span>·</span> <span id="flags-1">0</span> flags</div></div><div class="score-accent"></div></article>
+          </section>
+        </aside>
+      </section>
+
+      <section class="player-hand hand-panel" aria-label="Current player hand"><div class="hand-heading"><span id="player-hand-title">Player One’s hand</span><span class="card-count" id="player-card-count">7 cards</span></div><div class="card-row" id="player-hand"></div></section>
+
+      <footer class="game-footer"><button class="secondary-button" id="help-button" type="button">How to play</button><p><span class="active-dot"></span><span id="footer-status">Choose a card to begin</span></p><button class="primary-button" id="end-turn" type="button" disabled>End turn</button></footer>
+    </main>
+
+    <div class="turn-pop" id="turn-pop" aria-live="polite"><div class="turn-pop-icon">✦</div><div><span>Turn passed</span><strong id="turn-pop-name">Player Two</strong><small>Your turn</small></div></div>
+    <div class="turn-guide" id="turn-guide" aria-live="assertive"><div class="guide-arrow">↓</div><div><strong id="guide-title">Play a card or draw first</strong><span id="guide-copy">Choose a playable card from your hand below.</span></div></div>
+
+    <div class="modal-backdrop" id="setup-modal"><section class="modal" role="dialog" aria-modal="true" aria-labelledby="setup-title"><p class="eyebrow">New game</p><h2 id="setup-title">Set up your duel</h2><p class="modal-copy">Choose names and a board. The default is standard Beginner Minesweeper.</p><form id="setup-form"><div class="form-grid"><label>Player One<input name="playerOne" value="Player One" maxlength="18" required /></label><label>Player Two<input name="playerTwo" value="Player Two" maxlength="18" required /></label><label class="full-width">Opponent<select name="opponentMode"><option value="human">Human player</option><option value="medium-bot">Medium bot</option></select></label><label>Width<input name="width" type="number" min="9" value="9" required /></label><label>Height<input name="height" type="number" min="9" value="9" required /></label><label class="full-width">Mines<input name="mines" type="number" min="10" value="10" required /><small>Maximum is 20.6% of the board.</small></label></div><p class="form-error" id="form-error" role="alert"></p><button class="primary-button full-button" type="submit">Start game</button></form></section></div>
+    <div class="modal-backdrop" id="help-modal" hidden><section class="modal help-modal" role="dialog" aria-modal="true" aria-labelledby="help-title"><button class="modal-close" data-close="help-modal" type="button" aria-label="Close">×</button><p class="eyebrow">Quick rules</p><h2 id="help-title">How to play</h2><ul><li>Play a card matching the active color, or play Wild.</li><li>Number cards give that many shovel/flag actions.</li><li>Shovel once to reveal; double-click or choose Flag to mark a mine.</li><li>Reveal a mine and the other player wins immediately.</li><li>Safe reveals are worth 1 point; flags are worth 2, with penalties for wrong flags.</li><li>Draw cards are random and drawing ends the turn.</li></ul><button class="primary-button full-button" data-close="help-modal" type="button">Got it</button></section></div>
+    <div class="modal-backdrop" id="result-modal" hidden><section class="modal result-modal" id="result-modal-card" role="dialog" aria-modal="true" aria-labelledby="result-title"><div class="result-burst" id="result-burst">✹</div><p class="eyebrow">Game complete</p><h2 id="result-title">The board is settled</h2><p class="modal-copy" id="result-copy"></p><div class="result-actions"><button class="primary-button" id="new-game-button" type="button">Play again</button><button class="secondary-button" id="close-result-button" type="button">Finish</button></div></section></div>
+    <script src="app.js"></script>
+  </body>
+</html>
