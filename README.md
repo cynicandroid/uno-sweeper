@@ -45,7 +45,7 @@ Complete the Minesweeper board by revealing every safe square and correctly flag
 - If a player draws a card, their turn immediately ends.
 - When a player has 0 actions remaining, their turn ends automatically.
 - Players may play a card matching the active color or a number card matching the number on the top discard card. Matching action symbols alone do not make a card playable.
-- Wild and Wild Draw Four cards may be played regardless of color and change the active color.
+- Wild and Wild Draw Four cards may be played regardless of color, change the active color, force the opposing player to draw 4 cards, and let the original player continue.
 - Number cards provide that number of actions.
 - Skip, Reverse, and Wild do not provide reveal or flag actions.
 - In a two-player game, Reverse acts like Skip and removes the next player’s turn.

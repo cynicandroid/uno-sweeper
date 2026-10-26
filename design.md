@@ -31,7 +31,7 @@
 29. Flagged squares remain hidden during play and are checked when the game ends. Each incorrect flag incurs a 5-point penalty in addition to the normal flag score.
 30. A square may only be flagged once. A revealed square cannot be revealed again.
 31. If a player draws a card, their turn immediately ends and the other player takes the next turn.
-32. Skip, Reverse, and Wild cards do not allow the player to reveal or flag any squares. The number on the next number card played determines how many squares that player may reveal or flag.
+32. Skip and Reverse cards do not allow the player to reveal or flag any squares. Wild and Wild Draw Four force the opposing player to draw 4 cards; after choosing a color, the original player continues. The number on the next number card played determines how many squares that player may reveal or flag.
 33. The default board action is Shovel. A single click on a covered square performs the currently selected board action.
 34. A double click on a covered square always performs Flag, regardless of the currently selected board action.
 35. The board displays two action buttons with icons: Shovel and Flag. A single click on an action button selects that tool and visibly highlights it.

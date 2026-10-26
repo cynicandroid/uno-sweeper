@@ -91,6 +91,7 @@ function adjacentMines(index) {
 
 function cardClass(card) {
   if (card.type === 'wild4') return 'wild4-card';
+  if (card.type === 'reverse') return `${card.color}-card reverse-card`;
   return card.color ? `${card.color}-card` : 'wild-card';
 }
 
@@ -104,6 +105,9 @@ function cardMarkup(card) {
   }
   if (card.type === 'wild') {
     return `<span class="card-corner">Wild</span><span class="wild-quadrants" aria-hidden="true"><i></i><i></i><i></i><i></i></span><strong class="wild-center">Wild</strong><span class="card-corner bottom">Wild</span>`;
+  }
+  if (card.type === 'reverse') {
+    return '<strong class="reverse-icon" aria-hidden="true">⇄</strong>';
   }
   return `<span class="card-corner">${card.label}</span><strong>${card.label}</strong><span class="card-corner bottom">${card.label}</span>`;
 }
@@ -205,7 +209,6 @@ function renderCardPanel() {
   else if (game.phase === 'actions') instruction.innerHTML = `<strong>${game.actions} square action${game.actions === 1 ? '' : 's'} left</strong><span>${game.players[game.current].isBot ? 'Medium bot is choosing a move…' : 'Select Shovel or Flag below the board, then click a square.'}</span>`;
   else instruction.innerHTML = `<strong>${game.players[game.current].name}: ${game.players[game.current].isBot ? 'choosing a card…' : 'play a card or draw'}</strong><span>${game.players[game.current].isBot ? 'Medium bot is taking its turn.' : `Match ${COLOR_NAMES[game.activeColor].toLowerCase()}, match the number, play Wild, or draw to end your turn.`}</span>`;
   $('#draw-pile').disabled = game.phase !== 'card' || game.gameOver;
-  $('#end-turn').disabled = game.phase !== 'actions' || game.gameOver;
   $('#color-choices').hidden = !game.pendingWild;
 }
 
@@ -274,14 +277,13 @@ function playCard(index) {
     if (game.actions === 0) endTurn();
     return;
   }
-  finishSpecial(playerIndex, card.type);
+  finishSpecial(playerIndex);
 }
 
-function finishSpecial(playerIndex, type) {
+function finishSpecial(playerIndex) {
   const game = state.game;
   drawCards(playerIndex, 1);
-  if (type === 'skip' || type === 'reverse') game.current = playerIndex;
-  else game.current = 1 - playerIndex;
+  game.current = playerIndex;
   game.phase = 'card';
   game.actions = null;
   render();
@@ -293,13 +295,8 @@ function chooseWildColor(color) {
   const { playerIndex, card } = game.pendingWild;
   game.activeColor = color;
   game.pendingWild = null;
-  if (card.type === 'wild4') {
-    drawCards(1 - playerIndex, card.value);
-    game.current = playerIndex;
-  } else {
-    drawCards(playerIndex, 1);
-    game.current = 1 - playerIndex;
-  }
+  drawCards(1 - playerIndex, 4);
+  game.current = playerIndex;
   game.phase = 'card';
   game.actions = null;
   announceTurn(game.current);
@@ -465,14 +462,15 @@ function presentResult(reason, losingPlayer = null) {
 
 function endTurn() {
   const game = state.game;
-  if (!game || game.gameOver || game.phase !== 'actions') return;
+  if (!game || game.gameOver || game.phase !== 'actions' || game.animating) return;
   const player = game.current;
   drawCards(player, 1);
   game.current = 1 - player;
-  announceTurn(game.current);
   game.phase = 'card';
   game.actions = null;
   render();
+  announceTurn(game.current);
+  setFooter(`${game.players[player].name} ended the turn. ${game.players[game.current].name} may play a card or draw.`);
 }
 
 let turnPopTimer;
@@ -504,9 +502,11 @@ function closeModal(id) { $(`#${id}`).hidden = true; }
 let guideTimer;
 function showTurnGuide() {
   const guide = $('#turn-guide');
+  const choosingColor = Boolean(state.game?.pendingWild);
   positionOverlayAtBoardCenter(guide);
-  $('#guide-title').textContent = 'Play a card or draw first';
-  $('#guide-copy').textContent = 'Choose a playable card from your hand below.';
+  $('#guide-arrow').textContent = choosingColor ? '→' : '↑';
+  $('#guide-title').textContent = choosingColor ? 'Choose a color first' : 'Play a card or draw first';
+  $('#guide-copy').textContent = choosingColor ? 'Select a color tile in the Current Card panel on the right.' : 'Choose a playable card from your hand above.';
   guide.classList.remove('show');
   void guide.offsetWidth;
   guide.classList.add('show');
@@ -698,7 +698,6 @@ function bindEvents() {
   $('#new-game-button').addEventListener('click', () => { closeModal('result-modal'); newGame(loadSettings()); });
   $('#close-result-button').addEventListener('click', () => closeModal('result-modal'));
   $('#draw-pile').addEventListener('click', drawCard);
-  $('#end-turn').addEventListener('click', endTurn);
   $('#help-button').addEventListener('click', () => openModal('help-modal'));
   $$('[data-close]').forEach((button) => button.addEventListener('click', () => closeModal(button.dataset.close)));
   $$('[data-color]').forEach((button) => button.addEventListener('click', () => chooseWildColor(button.dataset.color)));
